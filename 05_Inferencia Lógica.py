@@ -11,7 +11,7 @@ def encadenamiento_hacia_adelante(base_conocimiento, hechos):
     nuevos_hechos = []
     while True:
         se_agregaron_nuevos_hechos = False
-        for regla, datos in base_conocimiento.items():
+        for regla, datos in base_de_conocimiento.items():
             if all(condicion in hechos for condicion in datos["si"]) and datos["entonces"] not in hechos:
                 nuevos_hechos.append(datos["entonces"])
                 se_agregaron_nuevos_hechos = True
@@ -23,14 +23,17 @@ def encadenamiento_hacia_adelante(base_conocimiento, hechos):
 def encadenamiento_hacia_atras(base_conocimiento, hechos, meta):
     if meta in hechos:
         return True
-    for regla, datos in base_conocimiento.items():
+    for regla, datos in base_de_conocimiento.items():
         if datos["entonces"] == meta:
             if all(encadenamiento_hacia_atras(base_conocimiento, hechos, condicion) for condicion in datos["si"]):
                 return True
     return False
 
+# Realizar encadenamiento hacia adelante
 nuevos_hechos = encadenamiento_hacia_adelante(base_de_conocimiento, hechos)
 print("Hechos derivados por encadenamiento hacia adelante:", nuevos_hechos)
 
+# Realizar encadenamiento hacia atrás para verificar si se puede llegar a "r"
 meta = "r"
-resultado = encadenamiento_hacia_atras(base_de_conocimiento)
+resultado = encadenamiento_hacia_atras(base_de_conocimiento, hechos, meta)
+print("¿Se puede llegar a la meta 'r' desde los hechos iniciales?", resultado)
